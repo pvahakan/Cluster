@@ -30,23 +30,26 @@ class Data:
         """
 
         # Read file
-        with open(self.path, newline='') as datafile:
-            reader = csv.reader(datafile, delimiter=',')
-            for row in reader:
-                if len(row) == 5:
-                    if float(row[4]) < 2 and float(row[4]) >= self.limit:
+        try:
+            with open(self.path, newline='') as datafile:
+                reader = csv.reader(datafile, delimiter=',')
+                for row in reader:
+                    if len(row) == 5:
+                        if float(row[4]) < 2 and float(row[4]) >= self.limit:
+                            self.atoms.append(row[0])
+                            self.x.append(float(row[1]))
+                            self.y.append(float(row[2]))
+                            self.z.append(float(row[3]))
+                            self.t.append(float(row[4]))
+                    elif len(row) == 4:
                         self.atoms.append(row[0])
                         self.x.append(float(row[1]))
                         self.y.append(float(row[2]))
                         self.z.append(float(row[3]))
-                        self.t.append(float(row[4]))
-                elif len(row) == 4:
-                    self.atoms.append(row[0])
-                    self.x.append(float(row[1]))
-                    self.y.append(float(row[2]))
-                    self.z.append(float(row[3]))
-                else:
-                    print("Unknown amount of columns in xyz file (", len(row), ")")
+                    else:
+                        print("Unknown amount of columns in xyz file (", len(row), ")")
+        except FileNotFoundError:
+            print("Coordinate file not found. Check the file path.")
 
         # Convert to numpy arrays
         self.x = np.array(self.x)
